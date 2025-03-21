@@ -106,7 +106,7 @@ export default function CartPage() {
               <tfoot className="bg-gray-50">
                 <tr>
                   <td colSpan={2} className="py-4 px-4 text-right font-medium">Subtotal:</td>
-                  <td className="py-4 px-4 text-right font-medium">${totalPrice.toFixed(2)}</td>
+                  <td className="py-4 px-4 text-right font-medium">₹{totalPrice.toFixed(2)}</td>
                   <td></td>
                 </tr>
               </tfoot>

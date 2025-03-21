@@ -411,7 +411,7 @@ export default function CheckoutForm() {
         <div className="border-t border-gray-200 pt-6">
           <div className="flex justify-between text-lg font-medium mb-6">
             <span>Total:</span>
-            <span>${totalPrice.toFixed(2)}</span>
+            <span>₹{totalPrice.toFixed(2)}</span>
           </div>
           
           <button
