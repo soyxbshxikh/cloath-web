@@ -2,8 +2,6 @@
 
 Cloath is a modern e-commerce platform for sustainable and ethical fashion. This Next.js application provides a responsive, user-friendly interface for customers to browse and purchase clothing items.
 
-![Cloath Logo](/public/images/logo_block.png)
-
 ## 🚀 Features
 
 - **Responsive Design**: Fully responsive UI that works on mobile, tablet, and desktop devices
