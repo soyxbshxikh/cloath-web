@@ -10,6 +10,7 @@ import { SiPhonepe } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
 
 type PaymentMethod = 'gpay' | 'phonepe' | 'cod';
+type PaymentStatus = 'idle' | 'pending' | 'success' | 'failed';
 
 interface PaymentInfo {
   phone: string;
@@ -28,6 +29,7 @@ export default function CheckoutForm() {
   const router = useRouter();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
+  const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentComplete, setIsPaymentComplete] = useState(false);
   
@@ -69,57 +71,222 @@ export default function CheckoutForm() {
   
   // Open app directly for payment
   const openPaymentApp = () => {
+    if (!validateForm()) {
+      return;
+    }
+    
     const paymentUrl = getPaymentUrl();
+    setPaymentStatus('pending');
+    setIsProcessing(true);
     
     if (typeof window !== 'undefined') {
+      // Store the payment timestamp to track when payment was initiated
+      sessionStorage.setItem('paymentStartTime', Date.now().toString());
+      sessionStorage.setItem('paymentMethod', paymentMethod);
+      sessionStorage.setItem('paymentAmount', totalPrice.toFixed(2));
+      
+      // Show processing message
+      toast.loading('Opening payment app...', { id: 'payment-process' });
+      
       // Try to open the payment URL which should trigger the app
       window.location.href = paymentUrl;
       
-      // After a short delay, show success message and complete the order
-      setTimeout(() => {
-        setIsPaymentComplete(true);
-        toast.success('Payment completed successfully!');
-        toast.success('Order placed successfully!');
-        
-        // Store order details
-        sessionStorage.setItem('completedOrder', 'true');
-        if (formData.email) {
-          sessionStorage.setItem('customerEmail', formData.email);
-        }
-        
-        // Redirect to success page
-        setTimeout(() => {
-          dispatch(clearCart());
-          router.push('/order-success');
-        }, 1500);
-      }, 2000);
+      // Handle payment status when user returns to the app
+      window.addEventListener('focus', handlePaymentReturn);
     }
+  };
+  
+  // Handle when user returns from payment app
+  const handlePaymentReturn = () => {
+    // Only run once
+    window.removeEventListener('focus', handlePaymentReturn);
+    
+    // Check if we're returning from a payment
+    const startTimeStr = sessionStorage.getItem('paymentStartTime');
+    if (!startTimeStr) return;
+    
+    const paymentStartTime = parseInt(startTimeStr);
+    const elapsedTime = Date.now() - paymentStartTime;
+    
+    // If user returns too quickly (less than 5 seconds), they probably didn't complete payment
+    if (elapsedTime < 5000) {
+      setPaymentStatus('failed');
+      setIsProcessing(false);
+      toast.dismiss('payment-process');
+      toast.error('Payment was not completed. Please try again.', {
+        duration: 5000,
+        position: 'top-center',
+        style: {
+          background: '#EF4444',
+          color: '#fff',
+          fontWeight: 'bold',
+          fontSize: '16px',
+          padding: '16px'
+        },
+        icon: '❌'
+      });
+      return;
+    }
+    
+    // If user returns after a reasonable time, show confirmation dialog
+    toast.dismiss('payment-process');
+    
+    // Create a custom modal for confirmation
+    const confirmed = window.confirm("Did your payment complete successfully?\n\nPress 'OK' if payment was successful or 'Cancel' if it failed.");
+    
+    if (confirmed) {
+      // Success path
+      handlePaymentSuccess();
+    } else {
+      // Failure path
+      handlePaymentFailure();
+    }
+    
+    // Clear the payment tracking data
+    sessionStorage.removeItem('paymentStartTime');
+  };
+  
+  const handlePaymentSuccess = () => {
+    setPaymentStatus('success');
+    setIsProcessing(false);
+    setIsPaymentComplete(true);
+    
+    // Show prominent success message
+    toast.success('Payment completed successfully!', {
+      duration: 5000,
+      position: 'top-center',
+      style: {
+        background: '#10B981',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '16px',
+        padding: '16px'
+      },
+      icon: '✅'
+    });
+    
+    toast.success('Order placed successfully!');
+    
+    // Store order details
+    sessionStorage.setItem('completedOrder', 'true');
+    if (formData.email) {
+      sessionStorage.setItem('customerEmail', formData.email);
+    }
+    
+    // Send order details via email
+    sendOrderConfirmationEmail();
+    
+    // Redirect to success page
+    setTimeout(() => {
+      dispatch(clearCart());
+      router.push('/order-success');
+    }, 1500);
+  };
+  
+  // Function to handle COD order success
+  const handleCodOrderSuccess = () => {
+    // Show success message
+    toast.success('Order placed successfully!');
+    
+    // Store order details
+    sessionStorage.setItem('completedOrder', 'true');
+    if (formData.email) {
+      sessionStorage.setItem('customerEmail', formData.email);
+    }
+    
+    // Send order details via email
+    sendOrderConfirmationEmail();
+    
+    // Clear cart and redirect
+    dispatch(clearCart());
+    router.push('/order-success');
+  };
+  
+  // Function to send email with order details
+  const sendOrderConfirmationEmail = () => {
+    // Create order summary with all details
+    const orderItems = cartItems.map(item => 
+      `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}`
+    ).join('\n');
+    
+    const orderSummary = `
+ORDER DETAILS
+-----------------
+Order Date: ${new Date().toLocaleString()}
+Payment Method: ${paymentMethod.toUpperCase()}
+Payment Status: ${paymentStatus === 'success' ? 'Paid' : 'Pending (COD)'}
+-----------------
+
+CUSTOMER INFORMATION
+-----------------
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Address: ${formData.address}
+City: ${formData.city}
+State: ${formData.state}
+Pincode: ${formData.pincode}
+-----------------
+
+PRODUCTS
+-----------------
+${orderItems}
+-----------------
+
+TOTAL: ₹${totalPrice.toFixed(2)}
+`;
+
+    // Create Gmail-specific URL
+    const subject = `New Order - ${formData.fullName} - ${new Date().toLocaleString()}`;
+    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=laxmijaiswar323@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderSummary)}`;
+    
+    // Open Gmail compose window in a new tab
+    window.open(gmailComposeUrl, '_blank');
+    
+    // Notify user about email status
+    toast.success("Order details have been prepared in Gmail. Please send the email to complete the order notification.", {
+      duration: 6000,
+    });
+  };
+  
+  const handlePaymentFailure = () => {
+    setPaymentStatus('failed');
+    setIsProcessing(false);
+    
+    // Show prominent failure message
+    toast.error('Payment failed!', {
+      duration: 5000,
+      position: 'top-center',
+      style: {
+        background: '#EF4444',
+        color: '#fff',
+        fontWeight: 'bold',
+        fontSize: '16px',
+        padding: '16px'
+      },
+      icon: '❌'
+    });
+    
+    toast.error('Please try again or choose a different payment method.');
+  };
+  
+  const validateForm = () => {
+    if (Object.values(formData).some(value => !value)) {
+      toast.error('Please fill all the required fields');
+      return false;
+    }
+    return true;
   };
   
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    if (Object.values(formData).some(value => !value)) {
-      toast.error('Please fill all the required fields');
+    if (!validateForm()) {
       return;
     }
     
     if (paymentMethod === 'cod') {
-      toast.success('Order placed successfully!');
-      dispatch(clearCart());
-      
-      // Set flag in sessionStorage to indicate completed order
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('completedOrder', 'true');
-        // Store customer email for order confirmation
-        if (formData.email) {
-          sessionStorage.setItem('customerEmail', formData.email);
-        }
-      }
-      
-      // Redirect to success page
-      router.push('/order-success');
+      handleCodOrderSuccess();
       return;
     }
     
@@ -253,6 +420,8 @@ export default function CheckoutForm() {
                 checked={paymentMethod === 'gpay'}
                 onChange={() => {
                   setPaymentMethod('gpay');
+                  setPaymentStatus('idle');
+                  setIsPaymentComplete(false);
                 }}
                 className="h-4 w-4 text-pink-600"
               />
@@ -274,12 +443,27 @@ export default function CheckoutForm() {
                   </div>
                 </div>
                 
+                {paymentStatus === 'failed' && (
+                  <div className="w-full bg-red-100 text-red-700 p-4 rounded-md mb-3 text-center font-medium">
+                    <p className="flex items-center justify-center"><span className="text-xl mr-2">❌</span> Payment Failed</p>
+                    <p className="text-sm mt-1">Please try again or select a different payment method.</p>
+                  </div>
+                )}
+                
+                {paymentStatus === 'success' && (
+                  <div className="w-full bg-green-100 text-green-700 p-4 rounded-md mb-3 text-center font-medium">
+                    <p className="flex items-center justify-center"><span className="text-xl mr-2">✅</span> Payment Successful</p>
+                    <p className="text-sm mt-1">Your order has been placed successfully!</p>
+                  </div>
+                )}
+                
                 <button
                   type="button"
                   onClick={openPaymentApp}
                   className="mt-3 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"
+                  disabled={isProcessing || paymentStatus === 'success'}
                 >
-                  Pay with Google Pay
+                  {isProcessing ? 'Processing Payment...' : paymentStatus === 'success' ? 'Payment Completed ✓' : 'Pay with Google Pay'}
                 </button>
               </div>
             )}
@@ -292,6 +476,8 @@ export default function CheckoutForm() {
                 checked={paymentMethod === 'phonepe'}
                 onChange={() => {
                   setPaymentMethod('phonepe');
+                  setPaymentStatus('idle');
+                  setIsPaymentComplete(false);
                 }}
                 className="h-4 w-4 text-pink-600"
               />
@@ -313,12 +499,27 @@ export default function CheckoutForm() {
                   </div>
                 </div>
                 
+                {paymentStatus === 'failed' && (
+                  <div className="w-full bg-red-100 text-red-700 p-4 rounded-md mb-3 text-center font-medium">
+                    <p className="flex items-center justify-center"><span className="text-xl mr-2">❌</span> Payment Failed</p>
+                    <p className="text-sm mt-1">Please try again or select a different payment method.</p>
+                  </div>
+                )}
+                
+                {paymentStatus === 'success' && (
+                  <div className="w-full bg-green-100 text-green-700 p-4 rounded-md mb-3 text-center font-medium">
+                    <p className="flex items-center justify-center"><span className="text-xl mr-2">✅</span> Payment Successful</p>
+                    <p className="text-sm mt-1">Your order has been placed successfully!</p>
+                  </div>
+                )}
+                
                 <button
                   type="button"
                   onClick={openPaymentApp}
                   className="mt-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center"
+                  disabled={isProcessing || paymentStatus === 'success'}
                 >
-                  Pay with PhonePe
+                  {isProcessing ? 'Processing Payment...' : paymentStatus === 'success' ? 'Payment Completed ✓' : 'Pay with PhonePe'}
                 </button>
               </div>
             )}
@@ -331,6 +532,7 @@ export default function CheckoutForm() {
                 checked={paymentMethod === 'cod'}
                 onChange={() => {
                   setPaymentMethod('cod');
+                  setPaymentStatus('idle');
                   setIsPaymentComplete(false);
                 }}
                 className="h-4 w-4 text-pink-600"
