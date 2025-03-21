@@ -57,7 +57,7 @@ export default function ProductCard({ product }: ProductCardProps) {
   
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all hover:shadow-lg hover:scale-[1.01] h-full flex flex-col">
-      <div className="relative h-48 xs:h-56 sm:h-64 w-full">
+      <div className="relative h-40 xs:h-48 sm:h-56 md:h-64 w-full">
         <div className="absolute top-0 left-0 w-full h-full bg-gray-100 animate-pulse" />
         <Image
           src={getImageSrc()}
@@ -65,35 +65,35 @@ export default function ProductCard({ product }: ProductCardProps) {
           fill
           className="object-cover"
           onError={handleImageError}
-          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          sizes="(max-width: 480px) 100vw, (max-width: 640px) 50vw, (max-width: 768px) 33vw, 25vw"
           priority={product.id === '1'} // Prioritize loading the first product
           unoptimized={imgError} // Skip image optimization for fallback images
         />
         <button 
-          className="absolute top-2 right-2 p-1.5 sm:p-2 bg-white rounded-full shadow-md z-10"
+          className="absolute top-1 right-1 p-1 sm:p-1.5 md:p-2 bg-white rounded-full shadow-md z-10"
           onClick={toggleWishlist}
           aria-label={isInWishlist ? "Remove from wishlist" : "Add to wishlist"}
         >
           {isInWishlist ? (
-            <FaHeart className="text-pink-500" size={16} />
+            <FaHeart className="text-pink-500" size={14} />
           ) : (
-            <FaRegHeart className="text-gray-500 hover:text-pink-500" size={16} />
+            <FaRegHeart className="text-gray-500 hover:text-pink-500" size={14} />
           )}
         </button>
       </div>
       
-      <div className="p-3 sm:p-4 flex flex-col flex-grow">
-        <h3 className="text-base sm:text-lg font-semibold mb-1 truncate">{product.name}</h3>
-        <p className="text-pink-600 font-bold mb-1 sm:mb-2 text-sm sm:text-base">{formatPrice(product.price)}</p>
-        <p className="text-gray-600 text-xs sm:text-sm mb-3 sm:mb-4 line-clamp-2 flex-grow">{product.description}</p>
+      <div className="p-2 xs:p-3 sm:p-4 flex flex-col flex-grow">
+        <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-0.5 xs:mb-1 truncate">{product.name}</h3>
+        <p className="text-pink-600 font-bold mb-0.5 xs:mb-1 sm:mb-2 text-xs xs:text-sm sm:text-base">{formatPrice(product.price)}</p>
+        <p className="text-gray-600 text-xs sm:text-sm mb-2 xs:mb-3 sm:mb-4 line-clamp-2 flex-grow">{product.description}</p>
         
         <div className="flex items-center justify-between mt-auto">
           <button
             onClick={handleAddToCart}
-            className="bg-pink-500 text-white py-1.5 sm:py-2 px-2 sm:px-4 rounded-md flex items-center gap-1 sm:gap-2 hover:bg-pink-600 transition-colors text-xs sm:text-sm"
+            className="bg-pink-500 text-white py-1 xs:py-1.5 sm:py-2 px-1.5 xs:px-2 sm:px-4 rounded-md flex items-center gap-1 sm:gap-2 hover:bg-pink-600 transition-colors text-xs sm:text-sm"
             aria-label={`Add ${product.name} to cart`}
           >
-            <FaShoppingCart size={12} className="sm:text-base" />
+            <FaShoppingCart size={10} className="xs:text-xs sm:text-base" />
             <span className="whitespace-nowrap">Add to Cart</span>
           </button>
           

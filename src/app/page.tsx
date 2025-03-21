@@ -100,20 +100,20 @@ export default function Home() {
       </section>
 
       {/* Featured Products */}
-      <section className="py-8 sm:py-12 md:py-16 px-4 sm:px-6">
+      <section className="py-6 xs:py-8 sm:py-12 md:py-16 px-2 xs:px-4 sm:px-6">
         <div className="container mx-auto">
-          <div className="flex justify-between items-center mb-4 sm:mb-6 md:mb-8">
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">Featured Products</h2>
+          <div className="flex justify-between items-center mb-3 xs:mb-4 sm:mb-6 md:mb-8">
+            <h2 className="text-lg xs:text-xl sm:text-2xl md:text-3xl font-bold text-gray-800">Featured Products</h2>
             <Link 
               href="/shop" 
-              className="flex items-center gap-1 sm:gap-2 text-pink-500 hover:text-pink-600 transition-colors text-sm sm:text-base"
+              className="flex items-center gap-1 sm:gap-2 text-pink-500 hover:text-pink-600 transition-colors text-xs xs:text-sm sm:text-base"
             >
               View All
-              <FaArrowRight size={12} className="sm:text-sm" />
+              <FaArrowRight size={10} className="xs:text-xs sm:text-sm" />
             </Link>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 xs:gap-3 sm:gap-4 md:gap-6">
             {featuredProducts.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}

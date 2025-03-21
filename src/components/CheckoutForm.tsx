@@ -278,6 +278,7 @@ TOTAL: ₹${totalPrice.toFixed(2)}
     return true;
   };
   
+  // Handle form submission
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -286,284 +287,221 @@ TOTAL: ₹${totalPrice.toFixed(2)}
     }
     
     if (paymentMethod === 'cod') {
-      handleCodOrderSuccess();
-      return;
+      setIsProcessing(true);
+      
+      // Simulate processing for COD
+      setTimeout(() => {
+        setIsProcessing(false);
+        handleCodOrderSuccess();
+      }, 1000);
+    } else {
+      // Handle digital payment methods
+      openPaymentApp();
     }
-    
-    // For online payment methods, we now handle everything through the openPaymentApp function
-    // which is called from the button click, so we don't need to do anything here
   };
   
   return (
-    <div className="bg-white rounded-lg shadow-md p-6">
-      <h2 className="text-2xl font-semibold mb-6">Checkout</h2>
+    <div className="bg-white rounded-lg shadow-md overflow-hidden p-3 xs:p-4 sm:p-6">
+      <h2 className="text-lg xs:text-xl font-semibold mb-3 xs:mb-4 pb-2 border-b">Checkout</h2>
       
+      {/* Shipping Details Form */}
       <form onSubmit={handleSubmit}>
-        <div className="mb-8">
-          <h3 className="text-lg font-medium mb-4">Shipping Information</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-1">
-                Full Name*
-              </label>
-              <input
-                type="text"
-                id="fullName"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-                Email*
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
-                Phone Number*
-              </label>
-              <input
-                type="tel"
-                id="phone"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div className="md:col-span-2">
-              <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                Address*
-              </label>
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                City*
-              </label>
-              <input
-                type="text"
-                id="city"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-1">
-                State/Province*
-              </label>
-              <input
-                type="text"
-                id="state"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-            
-            <div>
-              <label htmlFor="pincode" className="block text-sm font-medium text-gray-700 mb-1">
-                ZIP/Postal Code*
-              </label>
-              <input
-                type="text"
-                id="pincode"
-                name="pincode"
-                value={formData.pincode}
-                onChange={handleChange}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                required
-              />
-            </div>
-          </div>
-        </div>
-        
-        <div className="mb-8">
-          <h3 className="text-lg font-medium mb-4">Payment Method</h3>
-          <div className="space-y-4">
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="gpay"
-                name="paymentMethod"
-                checked={paymentMethod === 'gpay'}
-                onChange={() => {
-                  setPaymentMethod('gpay');
-                  setPaymentStatus('idle');
-                  setIsPaymentComplete(false);
-                }}
-                className="h-4 w-4 text-pink-600"
-              />
-              <label htmlFor="gpay" className="ml-2 text-sm font-medium text-gray-700 flex items-center">
-                <FaGooglePay className="text-2xl mr-1" /> Google Pay
-              </label>
-            </div>
-            
-            {paymentMethod === 'gpay' && (
-              <div className="ml-6 p-3 border border-gray-200 rounded-md flex flex-col items-center">
-                <div className="flex items-center justify-between w-full mb-3">
-                  <div>
-                    <p className="text-sm font-medium">Pay to</p>
-                    <p className="text-sm text-gray-600">{PAYMENT_INFO.phone}</p>
-                    <p className="text-sm text-gray-600">{PAYMENT_INFO.email}</p>
-                  </div>
-                  <div className="bg-green-100 p-2 rounded-lg">
-                    <FaGooglePay className="text-4xl text-green-600" />
-                  </div>
-                </div>
-                
-                {paymentStatus === 'failed' && (
-                  <div className="w-full bg-red-100 text-red-700 p-4 rounded-md mb-3 text-center font-medium">
-                    <p className="flex items-center justify-center"><span className="text-xl mr-2">❌</span> Payment Failed</p>
-                    <p className="text-sm mt-1">Please try again or select a different payment method.</p>
-                  </div>
-                )}
-                
-                {paymentStatus === 'success' && (
-                  <div className="w-full bg-green-100 text-green-700 p-4 rounded-md mb-3 text-center font-medium">
-                    <p className="flex items-center justify-center"><span className="text-xl mr-2">✅</span> Payment Successful</p>
-                    <p className="text-sm mt-1">Your order has been placed successfully!</p>
-                  </div>
-                )}
-                
-                <button
-                  type="button"
-                  onClick={openPaymentApp}
-                  className="mt-3 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"
-                  disabled={isProcessing || paymentStatus === 'success'}
-                >
-                  {isProcessing ? 'Processing Payment...' : paymentStatus === 'success' ? 'Payment Completed ✓' : 'Pay with Google Pay'}
-                </button>
-              </div>
-            )}
-            
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="phonepe"
-                name="paymentMethod"
-                checked={paymentMethod === 'phonepe'}
-                onChange={() => {
-                  setPaymentMethod('phonepe');
-                  setPaymentStatus('idle');
-                  setIsPaymentComplete(false);
-                }}
-                className="h-4 w-4 text-pink-600"
-              />
-              <label htmlFor="phonepe" className="ml-2 text-sm font-medium text-gray-700 flex items-center">
-                <SiPhonepe className="text-xl mr-1 text-indigo-600" /> PhonePe
-              </label>
-            </div>
-            
-            {paymentMethod === 'phonepe' && (
-              <div className="ml-6 p-3 border border-gray-200 rounded-md flex flex-col items-center">
-                <div className="flex items-center justify-between w-full mb-3">
-                  <div>
-                    <p className="text-sm font-medium">Pay to</p>
-                    <p className="text-sm text-gray-600">{PAYMENT_INFO.phone}</p>
-                    <p className="text-sm text-gray-600">{PAYMENT_INFO.email}</p>
-                  </div>
-                  <div className="bg-indigo-100 p-2 rounded-lg">
-                    <SiPhonepe className="text-2xl text-indigo-600" />
-                  </div>
-                </div>
-                
-                {paymentStatus === 'failed' && (
-                  <div className="w-full bg-red-100 text-red-700 p-4 rounded-md mb-3 text-center font-medium">
-                    <p className="flex items-center justify-center"><span className="text-xl mr-2">❌</span> Payment Failed</p>
-                    <p className="text-sm mt-1">Please try again or select a different payment method.</p>
-                  </div>
-                )}
-                
-                {paymentStatus === 'success' && (
-                  <div className="w-full bg-green-100 text-green-700 p-4 rounded-md mb-3 text-center font-medium">
-                    <p className="flex items-center justify-center"><span className="text-xl mr-2">✅</span> Payment Successful</p>
-                    <p className="text-sm mt-1">Your order has been placed successfully!</p>
-                  </div>
-                )}
-                
-                <button
-                  type="button"
-                  onClick={openPaymentApp}
-                  className="mt-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center"
-                  disabled={isProcessing || paymentStatus === 'success'}
-                >
-                  {isProcessing ? 'Processing Payment...' : paymentStatus === 'success' ? 'Payment Completed ✓' : 'Pay with PhonePe'}
-                </button>
-              </div>
-            )}
-            
-            <div className="flex items-center">
-              <input
-                type="radio"
-                id="cod"
-                name="paymentMethod"
-                checked={paymentMethod === 'cod'}
-                onChange={() => {
-                  setPaymentMethod('cod');
-                  setPaymentStatus('idle');
-                  setIsPaymentComplete(false);
-                }}
-                className="h-4 w-4 text-pink-600"
-              />
-              <label htmlFor="cod" className="ml-2 text-sm font-medium text-gray-700 flex items-center">
-                <FaMoneyBillWave className="text-lg mr-1 text-green-600" /> Cash on Delivery
-              </label>
-            </div>
-          </div>
-        </div>
-        
-        <div className="border-t border-gray-200 pt-6">
-          <div className="flex justify-between text-lg font-medium mb-6">
-            <span>Total:</span>
-            <span>₹{totalPrice.toFixed(2)}</span>
-          </div>
+        <div className="space-y-2 xs:space-y-3 sm:space-y-4 mb-3 xs:mb-4 sm:mb-6">
+          <h3 className="text-sm xs:text-base font-medium">Shipping Details</h3>
           
-          <button
-            type="submit"
-            className="w-full bg-pink-500 text-white py-3 px-4 rounded-md hover:bg-pink-600 transition-colors"
-            disabled={isProcessing || (paymentMethod !== 'cod' && !isPaymentComplete)}
-          >
-            {isProcessing 
-              ? 'Processing Payment...' 
-              : paymentMethod === 'cod' 
-                ? 'Place Order' 
-                : isPaymentComplete
-                  ? 'Complete Order'
-                  : 'Complete Payment'}
-          </button>
+          <div className="grid grid-cols-1 gap-2 xs:gap-3 sm:gap-4">
+            <div>
+              <label htmlFor="fullName" className="block text-xs xs:text-sm text-gray-700 mb-1">Full Name *</label>
+              <input 
+                type="text" 
+                id="fullName" 
+                name="fullName" 
+                value={formData.fullName} 
+                onChange={handleChange} 
+                required 
+                className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="email" className="block text-xs xs:text-sm text-gray-700 mb-1">Email *</label>
+              <input 
+                type="email" 
+                id="email" 
+                name="email" 
+                value={formData.email} 
+                onChange={handleChange} 
+                required 
+                className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="phone" className="block text-xs xs:text-sm text-gray-700 mb-1">Phone *</label>
+              <input 
+                type="tel" 
+                id="phone" 
+                name="phone" 
+                value={formData.phone} 
+                onChange={handleChange} 
+                required 
+                pattern="[0-9]{10}" 
+                title="Please enter a valid 10-digit phone number" 
+                className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+              />
+            </div>
+            
+            <div>
+              <label htmlFor="address" className="block text-xs xs:text-sm text-gray-700 mb-1">Address *</label>
+              <input 
+                type="text" 
+                id="address" 
+                name="address" 
+                value={formData.address} 
+                onChange={handleChange} 
+                required 
+                className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+              />
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2 xs:gap-3">
+              <div>
+                <label htmlFor="city" className="block text-xs xs:text-sm text-gray-700 mb-1">City *</label>
+                <input 
+                  type="text" 
+                  id="city" 
+                  name="city" 
+                  value={formData.city} 
+                  onChange={handleChange} 
+                  required 
+                  className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="state" className="block text-xs xs:text-sm text-gray-700 mb-1">State *</label>
+                <input 
+                  type="text" 
+                  id="state" 
+                  name="state" 
+                  value={formData.state} 
+                  onChange={handleChange} 
+                  required 
+                  className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+                />
+              </div>
+            </div>
+            
+            <div>
+              <label htmlFor="pincode" className="block text-xs xs:text-sm text-gray-700 mb-1">Pincode *</label>
+              <input 
+                type="text" 
+                id="pincode" 
+                name="pincode" 
+                value={formData.pincode} 
+                onChange={handleChange} 
+                required 
+                pattern="[0-9]{6}" 
+                title="Please enter a valid 6-digit pincode" 
+                className="w-full px-2 xs:px-3 py-1.5 xs:py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500 text-xs xs:text-sm"
+              />
+            </div>
+          </div>
         </div>
+        
+        {/* Payment Method Selection */}
+        <div className="space-y-2 xs:space-y-3 sm:space-y-4 mb-3 xs:mb-4 sm:mb-6">
+          <h3 className="text-sm xs:text-base font-medium">Payment Method</h3>
+          
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-3 gap-2 xs:gap-3">
+            <div className="flex items-center">
+              <input 
+                type="radio" 
+                id="gpay" 
+                name="paymentMethod" 
+                value="gpay" 
+                checked={paymentMethod === 'gpay'} 
+                onChange={() => setPaymentMethod('gpay')} 
+                className="w-4 h-4 text-pink-600"
+              />
+              <label htmlFor="gpay" className="ml-2 flex items-center text-xs xs:text-sm">
+                <FaGooglePay className="text-gray-800 text-lg xs:text-xl" />
+                <span className="ml-1">GPay</span>
+              </label>
+            </div>
+            
+            <div className="flex items-center">
+              <input 
+                type="radio" 
+                id="phonepe" 
+                name="paymentMethod" 
+                value="phonepe" 
+                checked={paymentMethod === 'phonepe'} 
+                onChange={() => setPaymentMethod('phonepe')} 
+                className="w-4 h-4 text-pink-600"
+              />
+              <label htmlFor="phonepe" className="ml-2 flex items-center text-xs xs:text-sm">
+                <SiPhonepe className="text-indigo-600 text-lg xs:text-xl" />
+                <span className="ml-1">PhonePe</span>
+              </label>
+            </div>
+            
+            <div className="flex items-center">
+              <input 
+                type="radio" 
+                id="cod" 
+                name="paymentMethod" 
+                value="cod" 
+                checked={paymentMethod === 'cod'} 
+                onChange={() => setPaymentMethod('cod')} 
+                className="w-4 h-4 text-pink-600"
+              />
+              <label htmlFor="cod" className="ml-2 flex items-center text-xs xs:text-sm">
+                <FaMoneyBillWave className="text-green-600 text-base xs:text-lg" />
+                <span className="ml-1">Cash on Delivery</span>
+              </label>
+            </div>
+          </div>
+        </div>
+        
+        {/* Order Summary */}
+        <div className="space-y-2 xs:space-y-3 sm:space-y-4 mb-4 xs:mb-5 sm:mb-6">
+          <h3 className="text-sm xs:text-base font-medium">Order Summary</h3>
+          
+          <div className="bg-gray-50 p-2 xs:p-3 rounded-md">
+            <div className="flex justify-between text-xs xs:text-sm">
+              <span>Subtotal</span>
+              <span>₹{totalPrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between text-xs xs:text-sm mt-1">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+            <div className="flex justify-between font-semibold text-sm xs:text-base mt-2 pt-2 border-t border-gray-200">
+              <span>Total</span>
+              <span>₹{totalPrice.toFixed(2)}</span>
+            </div>
+          </div>
+        </div>
+        
+        {/* Submit Button */}
+        <button 
+          type="submit" 
+          className="w-full bg-pink-500 text-white py-2 xs:py-3 px-4 rounded-md font-medium hover:bg-pink-600 transition-colors text-xs xs:text-sm sm:text-base flex justify-center items-center"
+          disabled={isProcessing}
+        >
+          {isProcessing ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Processing...
+            </>
+          ) : (
+            paymentMethod === 'cod' ? 'Place Order' : 'Pay Now'
+          )}
+        </button>
       </form>
     </div>
   );
