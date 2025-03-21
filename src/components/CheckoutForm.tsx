@@ -5,12 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { clearCart } from '@/store/cartSlice';
 import toast from 'react-hot-toast';
-import { QRCodeSVG } from 'qrcode.react';
 import { FaGooglePay, FaMoneyBillWave } from 'react-icons/fa';
 import { SiPhonepe } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
 
-type PaymentMethod = 'upi' | 'gpay' | 'phonepe' | 'cod';
+type PaymentMethod = 'gpay' | 'phonepe' | 'cod';
 
 interface PaymentInfo {
   phone: string;
@@ -29,8 +28,6 @@ export default function CheckoutForm() {
   const router = useRouter();
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
-  const [upiId, setUpiId] = useState('');
-  const [showQRCode, setShowQRCode] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
   const [isPaymentComplete, setIsPaymentComplete] = useState(false);
   
@@ -57,7 +54,7 @@ export default function CheckoutForm() {
     return total + (item.price * item.quantity);
   }, 0);
   
-  // Generate payment URL for QR code
+  // Generate payment URL for mobile app
   const getPaymentUrl = () => {
     const amount = totalPrice.toFixed(2);
     // This is a simplified example, in production you'd want to follow specific provider specs
@@ -66,7 +63,7 @@ export default function CheckoutForm() {
     } else if (paymentMethod === 'phonepe') {
       return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
     } else {
-      return `upi://pay?pa=${upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
+      return '';
     }
   };
   
@@ -78,39 +75,25 @@ export default function CheckoutForm() {
       // Try to open the payment URL which should trigger the app
       window.location.href = paymentUrl;
       
-      // After a short delay, check if the app opened successfully
+      // After a short delay, show success message and complete the order
       setTimeout(() => {
-        // If we're still on the same page, the app might not have opened
-        toast.success('Opening payment app...');
-      }, 500);
-    }
-  };
-
-  const simulatePaymentProcessing = () => {
-    setIsProcessing(true);
-    
-    // Simulating payment processing with timeout
-    setTimeout(() => {
-      setIsProcessing(false);
-      setIsPaymentComplete(true);
-      toast.success('Payment completed successfully!');
-      
-      // After payment, place the order
-      setTimeout(() => {
+        setIsPaymentComplete(true);
+        toast.success('Payment completed successfully!');
         toast.success('Order placed successfully!');
-        dispatch(clearCart());
-        // Set flag in sessionStorage to indicate completed order
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('completedOrder', 'true');
-          // Store customer email for order confirmation
-          if (formData.email) {
-            sessionStorage.setItem('customerEmail', formData.email);
-          }
+        
+        // Store order details
+        sessionStorage.setItem('completedOrder', 'true');
+        if (formData.email) {
+          sessionStorage.setItem('customerEmail', formData.email);
         }
+        
         // Redirect to success page
-        router.push('/order-success');
-      }, 1000);
-    }, 2000);
+        setTimeout(() => {
+          dispatch(clearCart());
+          router.push('/order-success');
+        }, 1500);
+      }, 2000);
+    }
   };
   
   const handleSubmit = (e: React.FormEvent) => {
@@ -119,11 +102,6 @@ export default function CheckoutForm() {
     // Validate form
     if (Object.values(formData).some(value => !value)) {
       toast.error('Please fill all the required fields');
-      return;
-    }
-    
-    if (paymentMethod === 'upi' && !upiId) {
-      toast.error('Please enter a valid UPI ID');
       return;
     }
     
@@ -145,8 +123,8 @@ export default function CheckoutForm() {
       return;
     }
     
-    // For online payment methods
-    simulatePaymentProcessing();
+    // For online payment methods, we now handle everything through the openPaymentApp function
+    // which is called from the button click, so we don't need to do anything here
   };
   
   return (
@@ -270,61 +248,11 @@ export default function CheckoutForm() {
             <div className="flex items-center">
               <input
                 type="radio"
-                id="upi"
-                name="paymentMethod"
-                checked={paymentMethod === 'upi'}
-                onChange={() => {
-                  setPaymentMethod('upi');
-                  setShowQRCode(false);
-                }}
-                className="h-4 w-4 text-pink-600"
-              />
-              <label htmlFor="upi" className="ml-2 text-sm font-medium text-gray-700 flex items-center">
-                UPI Payment
-              </label>
-            </div>
-            
-            {paymentMethod === 'upi' && (
-              <div className="ml-6 p-3 border border-gray-200 rounded-md">
-                <label htmlFor="upiId" className="block text-sm font-medium text-gray-700 mb-1">
-                  UPI ID
-                </label>
-                <input
-                  type="text"
-                  id="upiId"
-                  value={upiId}
-                  onChange={(e) => setUpiId(e.target.value)}
-                  placeholder="username@upi"
-                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-pink-500 focus:border-pink-500"
-                />
-                {upiId && (
-                  <button
-                    type="button"
-                    onClick={() => setShowQRCode(!showQRCode)}
-                    className="mt-2 text-sm text-pink-600 hover:text-pink-700"
-                  >
-                    {showQRCode ? 'Hide QR Code' : 'Generate QR Code'}
-                  </button>
-                )}
-                
-                {showQRCode && upiId && (
-                  <div className="mt-3 flex flex-col items-center">
-                    <QRCodeSVG value={getPaymentUrl()} size={180} />
-                    <p className="text-sm text-gray-600">Scan with any UPI app to pay</p>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            <div className="flex items-center">
-              <input
-                type="radio"
                 id="gpay"
                 name="paymentMethod"
                 checked={paymentMethod === 'gpay'}
                 onChange={() => {
                   setPaymentMethod('gpay');
-                  setShowQRCode(true);
                 }}
                 className="h-4 w-4 text-pink-600"
               />
@@ -353,20 +281,6 @@ export default function CheckoutForm() {
                 >
                   Pay with Google Pay
                 </button>
-                
-                <div className="mt-3 flex flex-col items-center">
-                  <p className="text-sm text-gray-500 mb-2">Or scan with Google Pay</p>
-                  <QRCodeSVG value={getPaymentUrl()} size={150} />
-                </div>
-                
-                <button
-                  type="button"
-                  onClick={simulatePaymentProcessing}
-                  className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? 'Processing...' : isPaymentComplete ? 'Payment Complete ✓' : 'Simulate Payment'}
-                </button>
               </div>
             )}
             
@@ -378,7 +292,6 @@ export default function CheckoutForm() {
                 checked={paymentMethod === 'phonepe'}
                 onChange={() => {
                   setPaymentMethod('phonepe');
-                  setShowQRCode(true);
                 }}
                 className="h-4 w-4 text-pink-600"
               />
@@ -407,20 +320,6 @@ export default function CheckoutForm() {
                 >
                   Pay with PhonePe
                 </button>
-                
-                <div className="mt-3 flex flex-col items-center">
-                  <p className="text-sm text-gray-500 mb-2">Or scan with PhonePe</p>
-                  <QRCodeSVG value={getPaymentUrl()} size={150} />
-                </div>
-                
-                <button
-                  type="button"
-                  onClick={simulatePaymentProcessing}
-                  className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors flex items-center justify-center"
-                  disabled={isProcessing}
-                >
-                  {isProcessing ? 'Processing...' : isPaymentComplete ? 'Payment Complete ✓' : 'Simulate Payment'}
-                </button>
               </div>
             )}
             
@@ -432,7 +331,6 @@ export default function CheckoutForm() {
                 checked={paymentMethod === 'cod'}
                 onChange={() => {
                   setPaymentMethod('cod');
-                  setShowQRCode(false);
                   setIsPaymentComplete(false);
                 }}
                 className="h-4 w-4 text-pink-600"
