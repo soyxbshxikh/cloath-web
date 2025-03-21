@@ -79,7 +79,7 @@ export default function Footer() {
             <div className="space-y-2">
               <p className="text-gray-300 flex items-center gap-2 text-sm sm:text-base">
                 <FaEnvelope className="text-pink-400 flex-shrink-0" /> 
-                <a href="mailto:laxmijaiswar@veda-edu.com" className="hover:text-pink-400 break-all">laxmijaiswar@veda-edu.com</a>
+                <a href="mailto:laxmijaiswar323@gmail.com" className="hover:text-pink-400 break-all">laxmijaiswar323@gmail.com</a>
               </p>
               <p className="text-gray-300 flex items-center gap-2 text-sm sm:text-base">
                 <FaPhone className="text-pink-400 flex-shrink-0" /> 
@@ -95,7 +95,7 @@ export default function Footer() {
         
         <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-300">
           <p className="text-sm sm:text-base">&copy; 2025 Cloath. All rights reserved.</p>
-          <p className="mt-1 text-xs sm:text-sm">Designed by <span className="text-pink-400 font-medium">Laxmi Jaiswar</span></p>
+          <p className="mt-1 text-xs sm:text-sm">Designed by <span className="text-pink-400 font-medium">Soyab Shaikh</span></p>
         </div>
       </div>
     </footer>

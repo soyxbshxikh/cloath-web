@@ -31,7 +31,7 @@ ${formData.message}
     `;
     
     // Create mailto link with form data
-    const mailtoLink = `mailto:laxmijaiswar@veda-edu.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(emailBody)}`;
+    const mailtoLink = `mailto:laxmijaiswar323@gmail.com?subject=${encodeURIComponent(formData.subject)}&body=${encodeURIComponent(emailBody)}`;
     
     // Open email client with prepopulated data
     window.open(mailtoLink, '_blank');
@@ -59,8 +59,8 @@ ${formData.message}
             <h2 className="text-2xl font-semibold mb-6">Send Us a Message</h2>
             <p className="text-gray-600 mb-6">
               Have questions about our products or services? Send us a message at{" "}
-              <a href="mailto:laxmijaiswar@veda-edu.com" className="text-pink-500 font-medium hover:underline">
-                laxmijaiswar@veda-edu.com
+              <a href="mailto:laxmijaiswar323@gmail.com" className="text-pink-500 font-medium hover:underline">
+              laxmijaiswar323@gmail.com
               </a>{" "}
               or use the form below.
             </p>
@@ -176,7 +176,7 @@ ${formData.message}
                 <div className="ml-4">
                   <h3 className="text-lg font-medium">Email Address</h3>
                   <p className="text-gray-600 mt-1">
-                    <a href="mailto:laxmijaiswar@veda-edu.com" className="hover:text-pink-500">laxmijaiswar@veda-edu.com</a>
+                    <a href="laxmijaiswar323@gmail.com" className="hover:text-pink-500">laxmijaiswar323@gmail.com</a>
                   </p>
                   <p className="text-gray-600">We aim to respond within 24 hours</p>
                 </div>

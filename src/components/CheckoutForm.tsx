@@ -19,9 +19,9 @@ interface PaymentInfo {
 }
 
 const PAYMENT_INFO: PaymentInfo = {
-  phone: '+91 9876543210', // Replace with your actual phone number
-  email: 'payments@cloath.com', // Replace with your actual email
-  upiId: 'cloath@okicici', // Replace with your actual UPI ID
+  phone: '+91 8830391908', // Replace with your actual phone number
+  email: 'laxmijaiswar323@gmail.com', // Replace with your actual email
+  upiId: 'soyxbshxikh@okhdfcbank', // Replace with your actual UPI ID
 };
 
 export default function CheckoutForm() {

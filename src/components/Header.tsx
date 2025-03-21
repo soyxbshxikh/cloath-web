@@ -28,9 +28,9 @@ export default function Header() {
               <FaPhoneAlt className="mr-2" size={14} />
               <span>+91 8830391908</span>
             </a>
-            <a href="mailto:laxmijaiswar@veda-edu.com" className="hidden sm:flex items-center hover:text-pink-100">
+            <a href="mailto:laxmijaiswar323@gmail.com" className="hidden sm:flex items-center hover:text-pink-100">
               <FaEnvelope className="mr-2" size={14} />
-              <span>laxmijaiswar@veda-edu.com</span>
+              <span>laxmijaiswar323@gmail.com</span>
             </a>
           </div>
         </div>
