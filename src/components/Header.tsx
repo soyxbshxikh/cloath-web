@@ -137,7 +137,7 @@ export default function Header() {
                 Contact
               </Link>
               <a 
-                href="mailto:laxmijaiswar@veda-edu.com" 
+                href="mailto:laxmijaiswar323@gmail.com" 
                 className="sm:hidden text-gray-700 hover:text-pink-500 hover:bg-gray-50 py-3 px-6 flex items-center"
                 onClick={() => setMobileMenuOpen(false)}
               >

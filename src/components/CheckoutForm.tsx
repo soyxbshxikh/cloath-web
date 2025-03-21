@@ -19,7 +19,7 @@ interface PaymentInfo {
 }
 
 const PAYMENT_INFO: PaymentInfo = {
-  phone: '+91 8830391908', // Replace with your actual phone number
+  phone: '+918830391908', // Replace with your actual phone number
   email: 'laxmijaiswar323@gmail.com', // Replace with your actual email
   upiId: 'soyxbshxikh@okhdfcbank', // Replace with your actual UPI ID
 };
@@ -67,6 +67,22 @@ export default function CheckoutForm() {
       return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
     } else {
       return `upi://pay?pa=${upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
+    }
+  };
+  
+  // Open app directly for payment
+  const openPaymentApp = () => {
+    const paymentUrl = getPaymentUrl();
+    
+    if (typeof window !== 'undefined') {
+      // Try to open the payment URL which should trigger the app
+      window.location.href = paymentUrl;
+      
+      // After a short delay, check if the app opened successfully
+      setTimeout(() => {
+        // If we're still on the same page, the app might not have opened
+        toast.success('Opening payment app...');
+      }, 500);
     }
   };
 
@@ -317,11 +333,11 @@ export default function CheckoutForm() {
               </label>
             </div>
             
-            {paymentMethod === 'gpay' && showQRCode && (
+            {paymentMethod === 'gpay' && (
               <div className="ml-6 p-3 border border-gray-200 rounded-md flex flex-col items-center">
                 <div className="flex items-center justify-between w-full mb-3">
                   <div>
-                    <p className="text-sm font-medium">Scan & Pay to</p>
+                    <p className="text-sm font-medium">Pay to</p>
                     <p className="text-sm text-gray-600">{PAYMENT_INFO.phone}</p>
                     <p className="text-sm text-gray-600">{PAYMENT_INFO.email}</p>
                   </div>
@@ -330,13 +346,23 @@ export default function CheckoutForm() {
                   </div>
                 </div>
                 
-                <QRCodeSVG value={getPaymentUrl()} size={180} />
-                <p className="text-sm text-gray-600">Scan with Google Pay to complete payment</p>
+                <button
+                  type="button"
+                  onClick={openPaymentApp}
+                  className="mt-3 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"
+                >
+                  Pay with Google Pay
+                </button>
+                
+                <div className="mt-3 flex flex-col items-center">
+                  <p className="text-sm text-gray-500 mb-2">Or scan with Google Pay</p>
+                  <QRCodeSVG value={getPaymentUrl()} size={150} />
+                </div>
                 
                 <button
                   type="button"
                   onClick={simulatePaymentProcessing}
-                  className="mt-3 w-full bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition-colors flex items-center justify-center"
+                  className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors flex items-center justify-center"
                   disabled={isProcessing}
                 >
                   {isProcessing ? 'Processing...' : isPaymentComplete ? 'Payment Complete ✓' : 'Simulate Payment'}
@@ -361,11 +387,11 @@ export default function CheckoutForm() {
               </label>
             </div>
             
-            {paymentMethod === 'phonepe' && showQRCode && (
+            {paymentMethod === 'phonepe' && (
               <div className="ml-6 p-3 border border-gray-200 rounded-md flex flex-col items-center">
                 <div className="flex items-center justify-between w-full mb-3">
                   <div>
-                    <p className="text-sm font-medium">Scan & Pay to</p>
+                    <p className="text-sm font-medium">Pay to</p>
                     <p className="text-sm text-gray-600">{PAYMENT_INFO.phone}</p>
                     <p className="text-sm text-gray-600">{PAYMENT_INFO.email}</p>
                   </div>
@@ -374,13 +400,23 @@ export default function CheckoutForm() {
                   </div>
                 </div>
                 
-                <QRCodeSVG value={getPaymentUrl()} size={180} />
-                <p className="text-sm text-gray-600">Scan with PhonePe to complete payment</p>
+                <button
+                  type="button"
+                  onClick={openPaymentApp}
+                  className="mt-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center"
+                >
+                  Pay with PhonePe
+                </button>
+                
+                <div className="mt-3 flex flex-col items-center">
+                  <p className="text-sm text-gray-500 mb-2">Or scan with PhonePe</p>
+                  <QRCodeSVG value={getPaymentUrl()} size={150} />
+                </div>
                 
                 <button
                   type="button"
                   onClick={simulatePaymentProcessing}
-                  className="mt-3 w-full bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition-colors flex items-center justify-center"
+                  className="mt-4 w-full bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors flex items-center justify-center"
                   disabled={isProcessing}
                 >
                   {isProcessing ? 'Processing...' : isPaymentComplete ? 'Payment Complete ✓' : 'Simulate Payment'}

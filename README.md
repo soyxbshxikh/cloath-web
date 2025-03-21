@@ -117,7 +117,7 @@ The site can be deployed on Vercel for optimal performance with Next.js:
 
 ## 📞 Contact Information
 
-- **Email**: laxmijaiswar@veda-edu.com
+- **Email**: laxmijaiswar323@gmail.com
 - **Address**: Waliv naka, Vasai east, Mumbai, Maharashtra 401208
 - **Social Media**: 
   - [Facebook](https://www.facebook.com/share/18GHwqV7as/)
@@ -150,4 +150,4 @@ This project is licensed under the MIT License.
 
 ## ✨ Designed By
 
-Laxmi Jaiswar
+Soyab Shaikh

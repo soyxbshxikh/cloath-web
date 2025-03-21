@@ -176,7 +176,7 @@ ${formData.message}
                 <div className="ml-4">
                   <h3 className="text-lg font-medium">Email Address</h3>
                   <p className="text-gray-600 mt-1">
-                    <a href="laxmijaiswar323@gmail.com" className="hover:text-pink-500">laxmijaiswar323@gmail.com</a>
+                    <a href="mailto:laxmijaiswar323@gmail.com" className="hover:text-pink-500">laxmijaiswar323@gmail.com</a>
                   </p>
                   <p className="text-gray-600">We aim to respond within 24 hours</p>
                 </div>
