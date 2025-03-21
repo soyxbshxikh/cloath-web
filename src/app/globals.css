@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+/* Swiper styles will be imported directly in the component */
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
