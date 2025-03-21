@@ -1,6 +1,6 @@
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaLeaf, FaRecycle, FaWater, FaMapMarkerAlt, FaPhone, FaCheckCircle } from 'react-icons/fa';
+import { FaLeaf, FaRecycle, FaWater, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 
 export const metadata = {
   title: 'About Us | Cloath - Fashion Redefined',
