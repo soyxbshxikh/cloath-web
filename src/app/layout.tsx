@@ -18,8 +18,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Cloth - Fashion & Clothing Store",
-  description: "Discover the latest fashion trends at Cloth, your premier online clothing store.",
+  title: "Looksay - Fashion & Clothing Store",
+  description: "Discover the latest fashion trends at looksay, your premier online clothing store.",
 };
 
 export default function RootLayout({

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { FaLeaf, FaRecycle, FaWater, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 
 export const metadata = {
-  title: 'About Us | Cloth - Fashion Redefined',
-  description: 'Learn about our story, mission, and commitment to sustainable fashion at Cloth.',
+  title: 'About Us | Looksay - Fashion Redefined',
+  description: 'Learn about our story, mission, and commitment to sustainable fashion at looksay.',
 };
 
 export default function AboutPage() {
