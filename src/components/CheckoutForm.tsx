@@ -22,7 +22,7 @@ interface PaymentInfo {
 const PAYMENT_INFO: PaymentInfo = {
   phone: '+918830391908', // Replace with your actual phone number
   email: 'laxmijaiswar323@gmail.com', // Replace with your actual email
-  upiId: 'soyxbshxikh@okhdfcbank', // Replace with your actual UPI ID
+  upiId: 'laxmijaiswar323@okaxis', // Replace with your actual UPI ID
 };
 
 export default function CheckoutForm() {
