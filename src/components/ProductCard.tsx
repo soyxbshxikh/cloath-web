@@ -87,19 +87,19 @@ export default function ProductCard({ product }: ProductCardProps) {
         <p className="text-pink-600 font-bold mb-0.5 xs:mb-1 sm:mb-2 text-xs xs:text-sm sm:text-base">{formatPrice(product.price)}</p>
         <p className="text-gray-600 text-xs sm:text-sm mb-2 xs:mb-3 sm:mb-4 line-clamp-2 flex-grow">{product.description}</p>
         
-        <div className="flex items-center justify-between mt-auto">
+        <div className="flex flex-col xs:flex-row items-start xs:items-center gap-2 xs:gap-3 justify-between mt-auto">
           <button
             onClick={handleAddToCart}
-            className="bg-pink-500 text-white py-1 xs:py-1.5 sm:py-2 px-1.5 xs:px-2 sm:px-4 rounded-md flex items-center gap-1 sm:gap-2 hover:bg-pink-600 transition-colors text-xs sm:text-sm"
+            className="bg-pink-500 text-white py-1.5 xs:py-1.5 sm:py-2 px-3 xs:px-3 sm:px-4 rounded-md flex items-center gap-1 sm:gap-2 hover:bg-pink-600 transition-colors text-xs sm:text-sm w-full xs:w-auto"
             aria-label={`Add ${product.name} to cart`}
           >
-            <FaShoppingCart size={10} className="xs:text-xs sm:text-base" />
+            <FaShoppingCart size={12} className="xs:text-xs sm:text-base" />
             <span className="whitespace-nowrap">Add to Cart</span>
           </button>
           
           <Link 
-            href="/shop"
-            className="text-pink-500 font-medium hover:underline text-xs sm:text-sm"
+            href={`/shop/${product.id}`}
+            className="text-pink-500 font-medium hover:underline text-xs sm:text-sm py-1.5 px-1"
           >
             View Details
           </Link>
