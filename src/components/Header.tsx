@@ -120,7 +120,7 @@ export default function Header() {
           <Link href="/" className="flex items-center">
             <Image 
               src="/images/logo_block.png" 
-              alt="Cloath" 
+              alt="Cloth" 
               width={140} 
               height={50} 
               priority

@@ -3,8 +3,8 @@ import Link from 'next/link';
 import { FaLeaf, FaRecycle, FaWater, FaMapMarkerAlt, FaCheckCircle } from 'react-icons/fa';
 
 export const metadata = {
-  title: 'About Us | Cloath - Fashion Redefined',
-  description: 'Learn about our story, mission, and commitment to sustainable fashion at Cloath.',
+  title: 'About Us | Cloth - Fashion Redefined',
+  description: 'Learn about our story, mission, and commitment to sustainable fashion at Cloth.',
 };
 
 export default function AboutPage() {
@@ -16,7 +16,7 @@ export default function AboutPage() {
         <div className="relative container mx-auto px-3 xs:px-4 sm:px-6 text-center">
           <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-2 xs:mb-4">Our Story</h1>
           <p className="text-sm xs:text-base sm:text-lg md:text-xl text-white max-w-3xl mx-auto">
-            Discover the journey behind Cloath and our commitment to redefining fashion with style, quality, and sustainability.
+            Discover the journey behind Cloth and our commitment to redefining fashion with style, quality, and sustainability.
           </p>
         </div>
       </section>
@@ -28,7 +28,7 @@ export default function AboutPage() {
             <div className="lg:w-1/2">
               <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-800 mb-3 xs:mb-4 sm:mb-6">Our Mission</h2>
               <p className="text-sm xs:text-base text-gray-600 mb-2 xs:mb-3">
-                At Cloath, we believe that fashion should be accessible, sustainable, and empowering. 
+                At Cloth, we believe that fashion should be accessible, sustainable, and empowering. 
                 Our mission is to create high-quality clothing that allows everyone to express their unique style 
                 while minimizing our environmental footprint.
               </p>
@@ -46,7 +46,7 @@ export default function AboutPage() {
             <div className="w-full lg:w-1/2 relative h-56 xs:h-64 sm:h-80 md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden shadow-xl">
               <Image 
                 src="/images/home/aboutStylish.jpg" 
-                alt="Cloath Fashion Mission" 
+                alt="Cloth Fashion Mission" 
                 fill 
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -110,7 +110,7 @@ export default function AboutPage() {
               <p className="text-sm xs:text-base text-gray-600 mb-2 xs:mb-3">
                 Led by our founder, Sophia Chen, our team combines decades of experience in the fashion industry with 
                 a forward-thinking approach to style and sustainability. We&apos;re proud of the diverse perspectives and 
-                talents that make Cloath what it is today.
+                talents that make Cloth what it is today.
               </p>
               <p className="text-sm xs:text-base text-gray-600 mb-3 xs:mb-4 sm:mb-6">
                 We&apos;re always looking for passionate individuals to join our growing team. If you share our values 
@@ -123,7 +123,7 @@ export default function AboutPage() {
             <div className="w-full lg:w-1/2 relative h-56 xs:h-64 sm:h-80 md:h-[400px] lg:h-[500px] rounded-lg overflow-hidden shadow-xl">
               <Image 
                 src="/images/team.jpg" 
-                alt="Cloath Team" 
+                alt="Cloth Team" 
                 fill 
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -200,7 +200,7 @@ export default function AboutPage() {
             <div className="w-full lg:w-1/2 relative h-40 xs:h-56 sm:h-64 md:h-[320px] lg:h-[400px] rounded-lg overflow-hidden shadow-xl">
               <Image 
                 src="/images/store.jpg" 
-                alt="Cloath Store Interior" 
+                alt="Cloth Store Interior" 
                 fill 
                 className="object-cover"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -209,7 +209,7 @@ export default function AboutPage() {
             </div>
             <div className="lg:w-1/2">
               <p className="text-sm xs:text-base text-gray-600 mb-3 xs:mb-4 sm:mb-6">
-                Experience the Cloath collection in person at one of our retail locations. Our stores are designed to create a 
+                Experience the Cloth collection in person at one of our retail locations. Our stores are designed to create a 
                 warm, inviting atmosphere where you can explore our latest designs, feel the quality of our fabrics, 
                 and receive personalized styling advice from our knowledgeable team.
               </p>

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Sign Up | Cloath - Fashion Redefined',
-  description: 'Create a new account with Cloath to enjoy a personalized shopping experience.',
+  title: 'Sign Up | Cloth - Fashion Redefined',
+  description: 'Create a new account with Cloth to enjoy a personalized shopping experience.',
 };
 
 export default function SignupLayout({

@@ -38,7 +38,7 @@ export default function OrderSuccessPage() {
     const phoneNumber = "918830391908";
     
     // Create message
-    const message = "Hello, I would like to inquire about my recent order from Cloath.";
+    const message = "Hello, I would like to inquire about my recent order from Cloth.";
     
     // Create WhatsApp URL
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;

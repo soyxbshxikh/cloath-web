@@ -18,8 +18,8 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: "Cloath - Fashion & Clothing Store",
-  description: "Discover the latest fashion trends at Cloath, your premier online clothing store.",
+  title: "Cloth - Fashion & Clothing Store",
+  description: "Discover the latest fashion trends at Cloth, your premier online clothing store.",
 };
 
 export default function RootLayout({

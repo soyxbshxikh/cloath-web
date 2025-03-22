@@ -12,7 +12,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-3 sm:mb-4">
               <Image 
                 src="/images/logo_block.png" 
-                alt="Cloath" 
+                alt="Cloth" 
                 width={120} 
                 height={40} 
                 className="w-auto h-8 sm:h-10 brightness-200 invert" 
@@ -94,7 +94,7 @@ export default function Footer() {
         </div>
         
         <div className="border-t border-gray-800 mt-6 sm:mt-8 pt-6 sm:pt-8 text-center text-gray-300">
-          <p className="text-sm sm:text-base">&copy; 2025 Cloath. All rights reserved.</p>
+          <p className="text-sm sm:text-base">&copy; 2025 Cloth. All rights reserved.</p>
           <p className="mt-1 text-xs sm:text-sm">Designed by <span className="text-pink-400 font-medium">Soyab Shaikh</span></p>
         </div>
       </div>

@@ -86,7 +86,7 @@ export default function SignUpPage() {
           {/* Header */}
           <div className="bg-pink-600 p-4 xs:p-6 text-center">
             <h1 className="text-xl xs:text-2xl font-bold text-white">Create an Account</h1>
-            <p className="text-xs xs:text-sm text-pink-100 mt-1">Join Cloath for a better shopping experience</p>
+            <p className="text-xs xs:text-sm text-pink-100 mt-1">Join Cloth for a better shopping experience</p>
           </div>
           
           {/* Form */}

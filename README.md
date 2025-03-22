@@ -1,6 +1,6 @@
-# Cloath - Fashion Redefined
+# Cloth - Fashion Redefined
 
-Cloath is a modern e-commerce platform for sustainable and ethical fashion. This Next.js application provides a responsive, user-friendly interface for customers to browse and purchase clothing items.
+Cloth is a modern e-commerce platform for sustainable and ethical fashion. This Next.js application provides a responsive, user-friendly interface for customers to browse and purchase clothing items.
 
 ## 🚀 Features
 
@@ -27,7 +27,7 @@ Cloath is a modern e-commerce platform for sustainable and ethical fashion. This
 ## 📋 Project Structure
 
 ```
-cloath-web/
+Cloth-web/
 ├── public/
 │   └── images/           # Static images
 ├── src/
@@ -63,8 +63,8 @@ cloath-web/
 
 1. Clone the repository:
    ```
-   git clone https://github.com/your-username/cloath-web.git
-   cd cloath-web
+   git clone https://github.com/your-username/Cloth-web.git
+   cd Cloth-web
    ```
 
 2. Install dependencies:

@@ -61,9 +61,9 @@ export default function CheckoutForm() {
     const amount = totalPrice.toFixed(2);
     // This is a simplified example, in production you'd want to follow specific provider specs
     if (paymentMethod === 'gpay') {
-      return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
+      return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=ClothStore&am=${amount}&cu=INR&tn=Payment for order`;
     } else if (paymentMethod === 'phonepe') {
-      return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=CloathStore&am=${amount}&cu=INR&tn=Payment for order`;
+      return `upi://pay?pa=${PAYMENT_INFO.upiId}&pn=ClothStore&am=${amount}&cu=INR&tn=Payment for order`;
     } else {
       return '';
     }
