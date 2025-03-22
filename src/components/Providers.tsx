@@ -11,7 +11,7 @@ interface ProvidersProps {
 export default function Providers({ children }: ProvidersProps) {
   return (
     <Provider store={store}>
-      <Toaster position="top-center" />
+      <Toaster position="bottom-center" />
       {children}
     </Provider>
   );

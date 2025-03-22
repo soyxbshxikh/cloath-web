@@ -7,7 +7,8 @@ import { addToCart, Product } from '@/store/cartSlice';
 import Image from 'next/image';
 import Link from 'next/link';
 import { FaShoppingCart, FaTrash, FaArrowLeft } from 'react-icons/fa';
-import toast from 'react-hot-toast';
+import Toast from '@/components/Toast';
+import formatPrice from '@/data/formatPrice';
 
 export default function WishlistPage() {
   const dispatch = useDispatch();
@@ -15,7 +16,7 @@ export default function WishlistPage() {
   
   const handleAddToCart = (product: Product) => {
     dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart!`);
+    Toast.success(`${product.name} added to cart!`);
   };
   
   if (wishlistItems.length === 0) {
@@ -53,7 +54,7 @@ export default function WishlistPage() {
             
             <div className="p-3 xs:p-4">
               <h3 className="text-sm xs:text-base sm:text-lg font-semibold mb-1 truncate">{item.name}</h3>
-              <p className="text-pink-600 font-bold mb-1 xs:mb-2 text-xs xs:text-sm sm:text-base">${item.price.toFixed(2)}</p>
+              <p className="text-pink-600 font-bold mb-1 xs:mb-2 text-xs xs:text-sm sm:text-base">{formatPrice(item.price)}</p>
               <p className="text-gray-600 text-xs sm:text-sm mb-2 xs:mb-3 sm:mb-4 line-clamp-2">{item.description}</p>
               
               <div className="flex justify-between">
@@ -69,7 +70,7 @@ export default function WishlistPage() {
                 <button
                   onClick={() => {
                     dispatch(removeFromWishlist(item.id));
-                    toast.success(`${item.name} removed from wishlist!`);
+                    Toast.info(`${item.name} removed from wishlist!`);
                   }}
                   className="text-red-500 hover:text-red-700 p-1 xs:p-1.5 sm:p-2"
                   aria-label={`Remove ${item.name} from wishlist`}

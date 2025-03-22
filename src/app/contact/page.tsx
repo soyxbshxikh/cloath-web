@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FaPhone, FaEnvelope, FaMapMarkerAlt } from 'react-icons/fa';
-import toast from 'react-hot-toast';
+import Toast from '@/components/Toast';
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -37,7 +37,7 @@ ${formData.message}
     window.open(mailtoLink, '_blank');
     
     // Show success message
-    toast.success('Thank you for your message! Redirecting to your email client...');
+    Toast.success('Thank you for your message! Redirecting to your email client...');
     
     // Reset form
     setFormData({

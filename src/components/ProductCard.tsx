@@ -9,8 +9,8 @@ import { Product } from '@/store/cartSlice';
 import { addToCart } from '@/store/cartSlice';
 import { addToWishlist, removeFromWishlist } from '@/store/wishlistSlice';
 import { RootState } from '@/store/store';
-import toast from 'react-hot-toast';
 import formatPrice from '@/data/formatPrice';
+import Toast from './Toast';
 
 interface ProductCardProps {
   product: Product;
@@ -24,16 +24,16 @@ export default function ProductCard({ product }: ProductCardProps) {
   
   const handleAddToCart = () => {
     dispatch(addToCart(product));
-    toast.success(`${product.name} added to cart!`);
+    Toast.success(`${product.name} added to cart!`);
   };
   
   const toggleWishlist = () => {
     if (isInWishlist) {
       dispatch(removeFromWishlist(product.id));
-      toast.success(`${product.name} removed from wishlist!`);
+      Toast.info(`${product.name} removed from wishlist!`);
     } else {
       dispatch(addToWishlist(product));
-      toast.success(`${product.name} added to wishlist!`);
+      Toast.success(`${product.name} added to wishlist!`);
     }
   };
   

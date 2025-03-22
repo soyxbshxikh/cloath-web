@@ -4,10 +4,11 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { clearCart } from '@/store/cartSlice';
-import toast from 'react-hot-toast';
-import { FaGooglePay, FaMoneyBillWave } from 'react-icons/fa';
+import { FaGooglePay, FaMoneyBillWave, FaWhatsapp } from 'react-icons/fa';
 import { SiPhonepe } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
+import Toast from './Toast';
+import formatPrice from '@/data/formatPrice';
 
 type PaymentMethod = 'gpay' | 'phonepe' | 'cod';
 type PaymentStatus = 'idle' | 'pending' | 'success' | 'failed';
@@ -86,7 +87,7 @@ export default function CheckoutForm() {
       sessionStorage.setItem('paymentAmount', totalPrice.toFixed(2));
       
       // Show processing message
-      toast.loading('Opening payment app...', { id: 'payment-process' });
+      Toast.loading('Opening payment app...', 'payment-process');
       
       // Try to open the payment URL which should trigger the app
       window.location.href = paymentUrl;
@@ -112,24 +113,13 @@ export default function CheckoutForm() {
     if (elapsedTime < 5000) {
       setPaymentStatus('failed');
       setIsProcessing(false);
-      toast.dismiss('payment-process');
-      toast.error('Payment was not completed. Please try again.', {
-        duration: 5000,
-        position: 'top-center',
-        style: {
-          background: '#EF4444',
-          color: '#fff',
-          fontWeight: 'bold',
-          fontSize: '16px',
-          padding: '16px'
-        },
-        icon: '❌'
-      });
+      Toast.dismiss('payment-process');
+      Toast.error('Payment was not completed. Please try again.', 5000);
       return;
     }
     
     // If user returns after a reasonable time, show confirmation dialog
-    toast.dismiss('payment-process');
+    Toast.dismiss('payment-process');
     
     // Create a custom modal for confirmation
     const confirmed = window.confirm("Did your payment complete successfully?\n\nPress 'OK' if payment was successful or 'Cancel' if it failed.");
@@ -146,26 +136,56 @@ export default function CheckoutForm() {
     sessionStorage.removeItem('paymentStartTime');
   };
   
+  // Add a function to send order details to WhatsApp
+  const sendOrderDetailsToWhatsApp = () => {
+    const orderItems = cartItems.map(item => 
+      `${item.name} (${item.quantity}x) - ${formatPrice(item.price * item.quantity)}`
+    ).join('\n');
+    
+    const orderSummary = `
+*NEW ORDER DETAILS*
+------------------
+Order Date: ${new Date().toLocaleString()}
+Payment Method: ${paymentMethod.toUpperCase()}
+Payment Status: ${paymentStatus === 'success' ? 'Paid' : 'Pending (COD)'}
+
+*CUSTOMER INFORMATION*
+------------------
+Name: ${formData.fullName}
+Email: ${formData.email}
+Phone: ${formData.phone}
+Address: ${formData.address}
+City: ${formData.city}
+State: ${formData.state}
+Pincode: ${formData.pincode}
+
+*PRODUCTS*
+------------------
+${orderItems}
+
+*TOTAL: ${formatPrice(totalPrice)}*
+`;
+
+    // Format the phone number (remove any + symbol as WhatsApp API doesn't need it)
+    const phoneNumber = "918830391908"; // WhatsApp number without + symbol
+    
+    // Create WhatsApp URL with the message
+    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(orderSummary)}`;
+    
+    // Open WhatsApp in a new tab
+    window.open(whatsappUrl, '_blank');
+    
+    // Notify user
+    Toast.success("Order details have been prepared in WhatsApp. Please send the message to complete your order.", 6000);
+  };
+  
   const handlePaymentSuccess = () => {
     setPaymentStatus('success');
     setIsProcessing(false);
     setIsPaymentComplete(true);
     
     // Show prominent success message
-    toast.success('Payment completed successfully!', {
-      duration: 5000,
-      position: 'top-center',
-      style: {
-        background: '#10B981',
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: '16px',
-        padding: '16px'
-      },
-      icon: '✅'
-    });
-    
-    toast.success('Order placed successfully!');
+    Toast.success('Payment completed successfully!', 5000);
     
     // Store order details
     sessionStorage.setItem('completedOrder', 'true');
@@ -173,33 +193,54 @@ export default function CheckoutForm() {
       sessionStorage.setItem('customerEmail', formData.email);
     }
     
-    // Send order details via email
-    sendOrderConfirmationEmail();
+    // First send order details via email
+    const emailSent = sendOrderConfirmationEmail();
     
-    // Redirect to success page
-    setTimeout(() => {
-      dispatch(clearCart());
-      router.push('/order-success');
-    }, 1500);
+    // Only proceed if email was sent
+    if (emailSent) {
+      // Then send WhatsApp notification and complete order
+      sendOrderDetailsToWhatsApp();
+      
+      // Show final success message
+      Toast.success('Order placed successfully!');
+      
+      // Redirect to success page
+      setTimeout(() => {
+        dispatch(clearCart());
+        router.push('/order-success');
+      }, 1500);
+    } else {
+      // If email wasn't sent
+      setIsProcessing(false);
+    }
   };
   
   // Function to handle COD order success
   const handleCodOrderSuccess = () => {
-    // Show success message
-    toast.success('Order placed successfully!');
+    // First send order details via email
+    const emailSent = sendOrderConfirmationEmail();
     
-    // Store order details
-    sessionStorage.setItem('completedOrder', 'true');
-    if (formData.email) {
-      sessionStorage.setItem('customerEmail', formData.email);
+    // Only proceed if email was sent
+    if (emailSent) {
+      // Show success message
+      Toast.success('Order placed successfully!');
+      
+      // Store order details
+      sessionStorage.setItem('completedOrder', 'true');
+      if (formData.email) {
+        sessionStorage.setItem('customerEmail', formData.email);
+      }
+      
+      // Send details via WhatsApp
+      sendOrderDetailsToWhatsApp();
+      
+      // Clear cart and redirect
+      dispatch(clearCart());
+      router.push('/order-success');
+    } else {
+      // If email wasn't sent
+      setIsProcessing(false);
     }
-    
-    // Send order details via email
-    sendOrderConfirmationEmail();
-    
-    // Clear cart and redirect
-    dispatch(clearCart());
-    router.push('/order-success');
   };
   
   // Function to send email with order details
@@ -240,13 +281,22 @@ TOTAL: ₹${totalPrice.toFixed(2)}
     const subject = `New Order - ${formData.fullName} - ${new Date().toLocaleString()}`;
     const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=laxmijaiswar323@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderSummary)}`;
     
-    // Open Gmail compose window in a new tab
-    window.open(gmailComposeUrl, '_blank');
+    // Create a custom modal for confirmation
+    const confirmed = window.confirm("Please click 'OK' to open Gmail and send order details. After sending the email, you'll see the order confirmation.");
     
-    // Notify user about email status
-    toast.success("Order details have been prepared in Gmail. Please send the email to complete the order notification.", {
-      duration: 6000,
-    });
+    if (confirmed) {
+      // Open Gmail compose window in a new tab
+      window.open(gmailComposeUrl, '_blank');
+      
+      // Notify user about email status
+      Toast.success("Order details have been prepared in Gmail. After sending the email, your order will be confirmed.", 6000);
+      
+      return true;
+    } else {
+      // If user cancels
+      Toast.error("You need to send the order details via email to complete your order.", 5000);
+      return false;
+    }
   };
   
   const handlePaymentFailure = () => {
@@ -254,25 +304,13 @@ TOTAL: ₹${totalPrice.toFixed(2)}
     setIsProcessing(false);
     
     // Show prominent failure message
-    toast.error('Payment failed!', {
-      duration: 5000,
-      position: 'top-center',
-      style: {
-        background: '#EF4444',
-        color: '#fff',
-        fontWeight: 'bold',
-        fontSize: '16px',
-        padding: '16px'
-      },
-      icon: '❌'
-    });
-    
-    toast.error('Please try again or choose a different payment method.');
+    Toast.error('Payment failed!', 5000);
+    Toast.error('Please try again or choose a different payment method.');
   };
   
   const validateForm = () => {
     if (Object.values(formData).some(value => !value)) {
-      toast.error('Please fill all the required fields');
+      Toast.error('Please fill all the required fields');
       return false;
     }
     return true;

@@ -3,6 +3,7 @@ import { products } from '@/data/products';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaArrowRight, FaStore, FaTruck, FaLock, FaHeadset, FaStar, FaQuoteLeft, FaShoppingBag } from 'react-icons/fa';
+import { ToastButton } from '@/components/Toast';
 
 export default function Home() {
   // Display 8 featured products on the homepage instead of 4
@@ -32,20 +33,18 @@ export default function Home() {
               <span className="inline-block px-3 py-1 bg-pink-500 text-white text-xs sm:text-sm rounded-full mb-2 sm:mb-4 animate-pulse">New Season Arrivals</span>
               <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-2 sm:mb-4 leading-tight">Elegant Dresses For Every Occasion</h1>
               <p className="text-gray-200 mb-4 sm:mb-6 md:mb-8 text-sm sm:text-base md:text-lg">Discover our stunning collection of dresses and elevate your wardrobe with our exclusive designs.</p>
-              <div className="flex flex-wrap gap-2 sm:gap-4">
+              <div className="mt-4 flex flex-wrap gap-3">
                 <Link 
                   href="/shop" 
-                  className="bg-pink-500 text-white px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-full inline-flex items-center justify-center hover:bg-pink-600 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-xs sm:text-sm md:text-base"
+                  className="bg-pink-500 hover:bg-pink-600 text-white px-4 xs:px-6 py-2 xs:py-3 rounded-md text-xs xs:text-sm sm:text-base transition-colors"
                 >
-                  <FaShoppingBag className="mr-2 text-xs sm:text-sm" />
                   Shop Now
                 </Link>
-                <Link 
-                  href="/shop?category=new" 
-                  className="bg-white text-gray-800 px-4 sm:px-6 md:px-8 py-2 sm:py-3 rounded-full inline-flex items-center justify-center hover:bg-gray-100 transition-colors shadow-lg hover:shadow-xl transform hover:-translate-y-1 text-xs sm:text-sm md:text-base"
-                >
-                  View New Arrivals
-                </Link>
+                <ToastButton 
+                  message="Thanks for visiting Cloath! Check out our latest arrivals." 
+                  buttonText="Show Notification" 
+                  type="info"
+                />
               </div>
             </div>
           </div>
