@@ -31,7 +31,9 @@ yarn-error.log*
 .pnpm-debug.log*
 
 # env files (can opt-in for committing if needed)
-.env*
+# Uncommenting the line below to include .env.local in version control for this demo
+# .env*
+!.env.local
 
 # vercel
 .vercel
