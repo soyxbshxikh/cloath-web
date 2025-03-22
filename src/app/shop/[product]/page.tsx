@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '@/store/cartSlice';
+import { addToCart, incrementQuantity } from '@/store/cartSlice';
 import { addToWishlist, removeFromWishlist } from '@/store/wishlistSlice';
 import { RootState } from '@/store/store';
 import { FaHeart, FaRegHeart, FaShoppingCart } from 'react-icons/fa';
@@ -40,10 +40,14 @@ export default function ProductPage() {
   
   const handleAddToCart = () => {
     if (product) {
-      dispatch(addToCart({
-        ...product,
-        quantity
-      }));
+      // Add to cart with just the product object
+      dispatch(addToCart(product));
+      // If we want to add multiple items, we can dispatch multiple times
+      if (quantity > 1) {
+        for (let i = 1; i < quantity; i++) {
+          dispatch(incrementQuantity(product.id));
+        }
+      }
       Toast.success(`${product.name} added to cart!`);
     }
   };
