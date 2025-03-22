@@ -12,13 +12,15 @@ import Toast from '@/components/Toast';
 import formatPrice from '@/data/formatPrice';
 import Link from 'next/link';
 
-interface ProductPageProps {
+// Update the interface to use the correct type for Next.js 15
+interface PageProps {
   params: {
     product: string;
   };
+  searchParams: Record<string, string | string[] | undefined>;
 }
 
-export default function ProductPage({ params }: ProductPageProps) {
+export default function ProductPage({ params }: PageProps) {
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
   
