@@ -28,7 +28,7 @@ export default function AboutPage() {
             <div className="lg:w-1/2">
               <h2 className="text-xl xs:text-2xl sm:text-3xl font-bold text-gray-800 mb-3 xs:mb-4 sm:mb-6">Our Mission</h2>
               <p className="text-sm xs:text-base text-gray-600 mb-2 xs:mb-3">
-                At Cloth, we believe that fashion should be accessible, sustainable, and empowering. 
+                At Looksay, we believe that fashion should be accessible, sustainable, and empowering. 
                 Our mission is to create high-quality clothing that allows everyone to express their unique style 
                 while minimizing our environmental footprint.
               </p>
@@ -108,7 +108,7 @@ export default function AboutPage() {
                 an exceptional experience for our customers.
               </p>
               <p className="text-sm xs:text-base text-gray-600 mb-2 xs:mb-3">
-                Led by our founder, Sophia Chen, our team combines decades of experience in the fashion industry with 
+                Led by our founder, Laxmi Jaiswar, our team combines decades of experience in the fashion industry with 
                 a forward-thinking approach to style and sustainability. We&apos;re proud of the diverse perspectives and 
                 talents that make Cloth what it is today.
               </p>

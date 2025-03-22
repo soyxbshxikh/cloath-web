@@ -127,7 +127,7 @@ export default function Home() {
             <div className="lg:w-1/2">
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-800 mb-3 sm:mb-4 md:mb-6">About Looksay</h2>
               <p className="text-gray-600 mb-3 sm:mb-4 text-sm sm:text-base">
-                Welcome to Cloth, your premier destination for fashion. 
+                Welcome to looksay, your premier destination for fashion. 
                 We are dedicated to bringing you the latest trends and timeless classics at affordable prices.
               </p>
               <p className="text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">

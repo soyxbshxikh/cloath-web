@@ -86,7 +86,7 @@ export default function SignUpPage() {
           {/* Header */}
           <div className="bg-pink-600 p-4 xs:p-6 text-center">
             <h1 className="text-xl xs:text-2xl font-bold text-white">Create an Account</h1>
-            <p className="text-xs xs:text-sm text-pink-100 mt-1">Join Cloth for a better shopping experience</p>
+            <p className="text-xs xs:text-sm text-pink-100 mt-1">Join Looksay for a better shopping experience</p>
           </div>
           
           {/* Form */}
@@ -109,7 +109,7 @@ export default function SignUpPage() {
                     value={formData.fullName}
                     onChange={handleChange}
                     className="block w-full pl-10 pr-3 py-2 xs:py-2.5 border border-gray-300 rounded-md shadow-sm focus:ring-pink-500 focus:border-pink-500 text-sm"
-                    placeholder="John Doe"
+                    placeholder="Enter your name"
                   />
                 </div>
               </div>
