@@ -11,13 +11,13 @@ import { products } from '@/data/products';
 import Toast from '@/components/Toast';
 import formatPrice from '@/data/formatPrice';
 import Link from 'next/link';
+import { useParams } from 'next/navigation';
 
-// Remove the interface entirely and use standard parameters for client components
-export default function ProductPage({ 
-  params 
-}: { 
-  params: { product: string } 
-}) {
+export default function ProductPage() {
+  // Use the useParams hook from next/navigation instead of props
+  const params = useParams();
+  const productId = params.product as string;
+  
   const dispatch = useDispatch();
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
   
@@ -28,15 +28,15 @@ export default function ProductPage({
   
   useEffect(() => {
     // Find product by ID from URL parameter
-    const foundProduct = products.find(p => p.id === params.product);
+    const foundProduct = products.find(p => p.id === productId);
     if (foundProduct) {
       setProduct(foundProduct);
     }
     
     // Check if in wishlist
-    const inWishlist = wishlistItems.some(item => item.id === params.product);
+    const inWishlist = wishlistItems.some(item => item.id === productId);
     setIsInWishlist(inWishlist);
-  }, [params.product, wishlistItems]);
+  }, [productId, wishlistItems]);
   
   const handleAddToCart = () => {
     if (product) {
