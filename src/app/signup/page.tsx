@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash, FaLock, FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
 import Toast from '@/components/Toast';
