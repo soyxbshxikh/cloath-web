@@ -135,7 +135,49 @@ export default function CheckoutForm() {
     sessionStorage.removeItem('paymentStartTime');
   };
   
-  // Add a function to send order details to WhatsApp
+  const handlePaymentSuccess = () => {
+    setPaymentStatus('success');
+    setIsProcessing(false);
+    
+    // Show prominent success message
+    Toast.success('Payment completed successfully!', 5000);
+    
+    // Store order details
+    sessionStorage.setItem('completedOrder', 'true');
+    if (formData.email) {
+      sessionStorage.setItem('customerEmail', formData.email);
+    }
+    
+    // Send order details to WhatsApp
+    sendOrderDetailsToWhatsApp();
+    
+    // Clear cart and redirect to success page after a brief delay
+    setTimeout(() => {
+      dispatch(clearCart());
+      router.push('/order-success');
+    }, 1500);
+  };
+  
+  // Function to handle COD order success
+  const handleCodOrderSuccess = () => {
+    // Show success message
+    Toast.success('Order placed successfully!');
+    
+    // Store order details
+    sessionStorage.setItem('completedOrder', 'true');
+    if (formData.email) {
+      sessionStorage.setItem('customerEmail', formData.email);
+    }
+    
+    // Send details via WhatsApp
+    sendOrderDetailsToWhatsApp();
+    
+    // Clear cart and redirect
+    dispatch(clearCart());
+    router.push('/order-success');
+  };
+  
+  // Remove the email function and update the WhatsApp function
   const sendOrderDetailsToWhatsApp = () => {
     const orderItems = cartItems.map(item => 
       `${item.name} (${item.quantity}x) - ${formatPrice(item.price * item.quantity)}`
@@ -175,126 +217,7 @@ ${orderItems}
     window.open(whatsappUrl, '_blank');
     
     // Notify user
-    Toast.success("Order details have been prepared in WhatsApp. Please send the message to complete your order.", 6000);
-  };
-  
-  const handlePaymentSuccess = () => {
-    setPaymentStatus('success');
-    setIsProcessing(false);
-    
-    // Show prominent success message
-    Toast.success('Payment completed successfully!', 5000);
-    
-    // Store order details
-    sessionStorage.setItem('completedOrder', 'true');
-    if (formData.email) {
-      sessionStorage.setItem('customerEmail', formData.email);
-    }
-    
-    // First send order details via email
-    const emailSent = sendOrderConfirmationEmail();
-    
-    // Only proceed if email was sent
-    if (emailSent) {
-      // Then send WhatsApp notification and complete order
-      sendOrderDetailsToWhatsApp();
-      
-      // Show final success message
-      Toast.success('Order placed successfully!');
-      
-      // Redirect to success page
-      setTimeout(() => {
-        dispatch(clearCart());
-        router.push('/order-success');
-      }, 1500);
-    } else {
-      // If email wasn't sent
-      setIsProcessing(false);
-    }
-  };
-  
-  // Function to handle COD order success
-  const handleCodOrderSuccess = () => {
-    // First send order details via email
-    const emailSent = sendOrderConfirmationEmail();
-    
-    // Only proceed if email was sent
-    if (emailSent) {
-      // Show success message
-      Toast.success('Order placed successfully!');
-      
-      // Store order details
-      sessionStorage.setItem('completedOrder', 'true');
-      if (formData.email) {
-        sessionStorage.setItem('customerEmail', formData.email);
-      }
-      
-      // Send details via WhatsApp
-      sendOrderDetailsToWhatsApp();
-      
-      // Clear cart and redirect
-      dispatch(clearCart());
-      router.push('/order-success');
-    } else {
-      // If email wasn't sent
-      setIsProcessing(false);
-    }
-  };
-  
-  // Function to send email with order details
-  const sendOrderConfirmationEmail = () => {
-    // Create order summary with all details
-    const orderItems = cartItems.map(item => 
-      `${item.name} (${item.quantity}x) - ₹${(item.price * item.quantity).toFixed(2)}`
-    ).join('\n');
-    
-    const orderSummary = `
-ORDER DETAILS
------------------
-Order Date: ${new Date().toLocaleString()}
-Payment Method: ${paymentMethod.toUpperCase()}
-Payment Status: ${paymentStatus === 'success' ? 'Paid' : 'Pending (COD)'}
------------------
-
-CUSTOMER INFORMATION
------------------
-Name: ${formData.fullName}
-Email: ${formData.email}
-Phone: ${formData.phone}
-Address: ${formData.address}
-City: ${formData.city}
-State: ${formData.state}
-Pincode: ${formData.pincode}
------------------
-
-PRODUCTS
------------------
-${orderItems}
------------------
-
-TOTAL: ₹${totalPrice.toFixed(2)}
-`;
-
-    // Create Gmail-specific URL
-    const subject = `New Order - ${formData.fullName} - ${new Date().toLocaleString()}`;
-    const gmailComposeUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=laxmijaiswar323@gmail.com&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(orderSummary)}`;
-    
-    // Create a custom modal for confirmation
-    const confirmed = window.confirm("Please click 'OK' to open Gmail and send order details. After sending the email, you'll see the order confirmation.");
-    
-    if (confirmed) {
-      // Open Gmail compose window in a new tab
-      window.open(gmailComposeUrl, '_blank');
-      
-      // Notify user about email status
-      Toast.success("Order details have been prepared in Gmail. After sending the email, your order will be confirmed.", 6000);
-      
-      return true;
-    } else {
-      // If user cancels
-      Toast.error("You need to send the order details via email to complete your order.", 5000);
-      return false;
-    }
+    Toast.success("Please send the WhatsApp message to complete your order.", 6000);
   };
   
   const handlePaymentFailure = () => {
