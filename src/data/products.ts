@@ -4,7 +4,7 @@ export const products: Product[] = [
   {
     id: '1',
     name: 'Summer Floral Dress',
-    price: 3999,
+    price: 1,
     image: '/images/home/homeproduct1.jpg',
     description: 'A beautiful floral summer dress perfect for sunny days. Made from lightweight fabric with a flattering fit and flowing design.',
   },
