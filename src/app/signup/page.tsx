@@ -7,11 +7,6 @@ import { useRouter } from 'next/navigation';
 import { FaEye, FaEyeSlash, FaLock, FaUser, FaEnvelope, FaPhone } from 'react-icons/fa';
 import Toast from '@/components/Toast';
 
-export const metadata = {
-  title: 'Sign Up | Cloath - Fashion Redefined',
-  description: 'Create a new account with Cloath to enjoy a personalized shopping experience.',
-};
-
 export default function SignUpPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
