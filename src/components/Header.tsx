@@ -2,20 +2,73 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
-import { FaShoppingCart, FaHeart, FaPhoneAlt, FaEnvelope, FaHome, FaShoppingBag, FaInfoCircle, FaAddressBook, FaBars, FaTimes } from 'react-icons/fa';
+import { 
+  FaShoppingCart, 
+  FaHeart, 
+  FaPhoneAlt, 
+  FaEnvelope, 
+  FaHome, 
+  FaShoppingBag, 
+  FaInfoCircle, 
+  FaAddressBook, 
+  FaBars, 
+  FaTimes,
+  FaUser,
+  FaSignOutAlt
+} from 'react-icons/fa';
 
 export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
   const cartItems = useSelector((state: RootState) => state.cart.items);
   const wishlistItems = useSelector((state: RootState) => state.wishlist.items);
   
   const cartItemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
   
+  // Check if user is logged in on component mount and window focus
+  useEffect(() => {
+    const checkLoginStatus = () => {
+      const userData = localStorage.getItem('user') || sessionStorage.getItem('user');
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          setIsLoggedIn(true);
+          setUserName(user.fullName || user.email?.split('@')[0]);
+        } catch (error) {
+          console.error('Error parsing user data', error);
+          setIsLoggedIn(false);
+          setUserName(null);
+        }
+      } else {
+        setIsLoggedIn(false);
+        setUserName(null);
+      }
+    };
+
+    checkLoginStatus();
+    
+    // Update login status when window gains focus (user might have logged in/out in another tab)
+    window.addEventListener('focus', checkLoginStatus);
+    
+    return () => {
+      window.removeEventListener('focus', checkLoginStatus);
+    };
+  }, []);
+  
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
+  };
+  
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
+    setIsLoggedIn(false);
+    setUserName(null);
+    setMobileMenuOpen(false);
   };
   
   return (
@@ -32,6 +85,31 @@ export default function Header() {
               <FaEnvelope className="mr-2" size={14} />
               <span>laxmijaiswar323@gmail.com</span>
             </a>
+          </div>
+          
+          {/* Login/Signup links in top bar */}
+          <div className="text-sm">
+            {isLoggedIn ? (
+              <div className="flex items-center space-x-2">
+                <span className="text-white hidden sm:inline">Welcome, {userName}</span>
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center hover:text-pink-100"
+                >
+                  <FaSignOutAlt className="mr-1" size={14} />
+                  <span>Logout</span>
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center space-x-4">
+                <Link href="/login" className="flex items-center hover:text-pink-100">
+                  <span>Login</span>
+                </Link>
+                <Link href="/signup" className="flex items-center hover:text-pink-100">
+                  <span>Sign Up</span>
+                </Link>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -71,6 +149,17 @@ export default function Header() {
           </nav>
           
           <div className="flex items-center space-x-4 sm:space-x-6">
+            {/* My Account icon for desktop */}
+            {isLoggedIn ? (
+              <Link href="/account" className="hidden md:block text-gray-700 hover:text-pink-500">
+                <FaUser size={18} className="sm:text-xl" />
+              </Link>
+            ) : (
+              <Link href="/login" className="hidden md:block text-gray-700 hover:text-pink-500">
+                <FaUser size={18} className="sm:text-xl" />
+              </Link>
+            )}
+            
             <Link href="/wishlist" className="text-gray-700 hover:text-pink-500 relative">
               <FaHeart size={20} className="sm:text-2xl" />
               {wishlistItems.length > 0 && (
@@ -144,6 +233,46 @@ export default function Header() {
                 <FaEnvelope className="mr-3" size={18} />
                 Email Us
               </a>
+              
+              {/* Login/Account links for mobile */}
+              {isLoggedIn ? (
+                <>
+                  <Link 
+                    href="/account" 
+                    className="text-gray-700 hover:text-pink-500 hover:bg-gray-50 py-3 px-6 flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FaUser className="mr-3" size={18} />
+                    My Account
+                  </Link>
+                  <button 
+                    onClick={handleLogout}
+                    className="text-left text-gray-700 hover:text-pink-500 hover:bg-gray-50 py-3 px-6 flex items-center w-full"
+                  >
+                    <FaSignOutAlt className="mr-3" size={18} />
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className="text-gray-700 hover:text-pink-500 hover:bg-gray-50 py-3 px-6 flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FaUser className="mr-3" size={18} />
+                    Login
+                  </Link>
+                  <Link 
+                    href="/signup" 
+                    className="text-gray-700 hover:text-pink-500 hover:bg-gray-50 py-3 px-6 flex items-center"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <FaUser className="mr-3" size={18} />
+                    Sign Up
+                  </Link>
+                </>
+              )}
             </nav>
           </div>
         )}
