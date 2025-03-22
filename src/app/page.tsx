@@ -2,7 +2,7 @@ import ProductCard from '@/components/ProductCard';
 import { products } from '@/data/products';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaArrowRight, FaStore, FaTruck, FaLock, FaHeadset, FaStar, FaQuoteLeft, FaShoppingBag } from 'react-icons/fa';
+import { FaArrowRight, FaStore, FaTruck, FaLock, FaHeadset, FaStar, FaQuoteLeft } from 'react-icons/fa';
 import { ToastButton } from '@/components/Toast';
 
 export default function Home() {

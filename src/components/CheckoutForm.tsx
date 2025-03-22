@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '@/store/store';
 import { clearCart } from '@/store/cartSlice';
-import { FaGooglePay, FaMoneyBillWave, FaWhatsapp } from 'react-icons/fa';
+import { FaGooglePay, FaMoneyBillWave } from 'react-icons/fa';
 import { SiPhonepe } from 'react-icons/si';
 import { useRouter } from 'next/navigation';
 import Toast from './Toast';
@@ -32,7 +32,6 @@ export default function CheckoutForm() {
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('cod');
   const [paymentStatus, setPaymentStatus] = useState<PaymentStatus>('idle');
   const [isProcessing, setIsProcessing] = useState(false);
-  const [isPaymentComplete, setIsPaymentComplete] = useState(false);
   
   // Form fields
   const [formData, setFormData] = useState({
@@ -182,7 +181,6 @@ ${orderItems}
   const handlePaymentSuccess = () => {
     setPaymentStatus('success');
     setIsProcessing(false);
-    setIsPaymentComplete(true);
     
     // Show prominent success message
     Toast.success('Payment completed successfully!', 5000);
