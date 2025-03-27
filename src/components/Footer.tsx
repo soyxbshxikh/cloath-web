@@ -27,7 +27,7 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="mt-4 sm:mt-0">
+          <div className="mt-4 sm:mt-0 hidden sm:block">
             <h3 className="text-lg sm:text-xl font-semibold mb-3 sm:mb-4">Quick Links</h3>
             <ul className="grid grid-cols-2 sm:grid-cols-1 gap-x-4 gap-y-2">
               <li>
